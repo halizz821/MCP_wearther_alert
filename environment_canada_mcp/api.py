@@ -55,34 +55,7 @@ class EnvironmentCanadaAPI:
             logger.error(f"Unexpected error fetching weather alerts: {e}")
             return None
 
-    async def fetch_raw_alerts_async(self, limit: int = 2000) -> Optional[Dict[str, Any]]:
-        """Asynchronously fetches raw weather alerts from the Environment Canada OGC API.
-
-        Non-blocking async variant of fetch_raw_alerts for use in async event loops.
-
-        Args:
-            limit: Maximum number of GeoJSON features to retrieve. Defaults to 2000.
-
-        Returns:
-            A dictionary parsed from the GeoJSON FeatureCollection response, or None
-            if an HTTP or network error occurs.
-        """
-        params = {
-            "f": "json",
-            "limit": limit,
-        }
-        try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
-                response = await client.get(self.base_url, params=params)
-                response.raise_for_status()
-                return response.json()
-        except httpx.HTTPError as e:
-            logger.error(f"HTTP error fetching weather alerts: {e}")
-            return None
-        except Exception as e:
-            logger.error(f"Unexpected error fetching weather alerts: {e}")
-            return None
-
+    
     def clean_and_group_features(self, raw_data: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Cleans, normalizes, and groups raw GeoJSON features from Environment Canada.
 
